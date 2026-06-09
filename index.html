@@ -1,82 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RASIK S | Archive</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
-    <style>
-        /* ALL CSS IS NOW INLINED HERE */
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{
-            --nokia-bg:#111a11; --nokia-screen:#1c2e1c; --nokia-mid:#2d4a2d;
-            --nokia-lit:#6aab3a; --nokia-bright:#9dd65a; --nokia-glow:#c8f087;
-            --nokia-dim:#3a5a3a; --nokia-border:#2a3e2a; --sidebar-w:260px;
-        }
-        html{scroll-behavior:smooth}
-        body{background:var(--nokia-bg);color:var(--nokia-bright);font-family:Georgia,serif;line-height:1.8;display:flex;min-height:100vh;}
-        
-        /* Sidebar */
-        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--nokia-screen);border-right:2px solid var(--nokia-mid);display:flex;flex-direction:column;justify-content:space-between;padding:2rem 1.5rem;z-index:200;}
-        
-        /* Pixel Name */
-        .pixel-name{font-family:'Press Start 2P', monospace;font-size:14px;color:var(--nokia-glow);display:block;margin-bottom:10px;}
-        
-        /* Nav */
-        nav{display:flex;flex-direction:column;gap:10px;}
-        nav a{font-family:'Share Tech Mono', monospace;font-size:12px;color:var(--nokia-lit);text-decoration:none;padding:5px;}
-        nav a:hover{color:var(--nokia-glow);}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RASIK S | Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        /* Content */
-        .content{margin-left:var(--sidebar-w);flex:1;padding:4rem;}
-        section{min-height:100vh;padding:4rem 0;border-bottom:1px solid var(--nokia-border);}
-        h1{font-family:'Press Start 2P', monospace;font-size:24px;margin-bottom:20px;color:var(--nokia-glow);}
-        .section-title{font-family:'Press Start 2P', monospace;font-size:12px;color:var(--nokia-lit);margin-bottom:30px;}
-        .meta{font-family:'Share Tech Mono', monospace;color:var(--nokia-dim);font-size:10px;}
-        p{color:var(--nokia-lit);margin-top:10px;}
+:root{
+  --nokia-bg:       #111a11;
+  --nokia-screen:   #1c2e1c;
+  --nokia-mid:      #2d4a2d;
+  --nokia-lit:      #6aab3a;
+  --nokia-bright:   #9dd65a;
+  --nokia-glow:     #c8f087;
+  --nokia-dim:      #3a5a3a;
+  --nokia-border:   #2a3e2a;
+  --nokia-pixel:    #b6e65e;
+  --sidebar-w:      230px;
+  --font-pixel:     'Press Start 2P', monospace;
+  --font-mono:      'Share Tech Mono', monospace;
+  --font-body:      Georgia, serif;
+}
 
-        /* Mobile */
-        @media(max-width:768px){
-            body{flex-direction:column;}
-            .sidebar{position:relative;width:100%;height:auto;border-right:none;}
-            .content{margin-left:0;padding:2rem;}
-        }
-    </style>
+html{scroll-behavior:smooth}
+body{
+  background:var(--nokia-bg);
+  color:var(--nokia-bright);
+  font-family:var(--font-body);
+  font-size:15px;
+  line-height:1.8;
+  display:flex;
+  min-height:100vh;
+}
+
+/* ─── SCANLINE OVERLAY ─── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  position:fixed;
+  top:0;left:0;
+  width:var(--sidebar-w);
+  height:100vh;
+  background:var(--nokia-screen);
+  border-right:2px solid var(--nokia-mid);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:2rem 1.5rem;
+  z-index:200;
+  overflow:hidden;
+}
+
+/* Nokia screen frame lines */
+.sidebar::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--nokia-lit);
+  box-shadow:0 0 8px var(--nokia-lit);
+}
+
+/* ─── PIXEL NAME ─── */
+.pixel-name-wrap{
+  margin-bottom:2rem;
+}
+
+.pixel-name{
+  font-family:var(--font-pixel);
+  font-size: 14px; /* Increased from 9px */
+  color:var(--nokia-glow);
+  letter-spacing: 0.05em;
+  line-height: 1.6; /* Slightly adjusted to accommodate size */
+  text-shadow: 0 0 6px var(--nokia-lit), 0 0 14px rgba(106,171,58,0.4);
+  display:block;
+  word-break: break-word;
+  margin-bottom: 5px; /* Added a little space below it */
+}
+
+.pixel-sub{
+  font-family:var(--font-mono);
+  font-size:10px;
+  color:var(--nokia-dim);
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-top:6px;
+  display:block;
+}
+
+/* pixel underscore blink */
+.pixel-cursor{
+  display:inline-block;
+  width:7px;height:9px;
+  background:var(--nokia-glow);
+  margin-left:3px;
+  vertical-align:middle;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink{50%{opacity:0}}
+
+/* status bar */
+.status-bar{
+  font-family:var(--font-mono);
+  font-size:9px;
+  color:var(--nokia-dim);
+  letter-spacing:0.12em;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--nokia-border);
+  margin-bottom:1.5rem;
+}
+
+.signal-bars{
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+}
+.signal-bars span{
+  display:block;
+  width:4px;
+  background:var(--nokia-lit);
+}
+.signal-bars span:nth-child(1){height:4px}
+.signal-bars span:nth-child(2){height:6px}
+.signal-bars span:nth-child(3){height:8px}
+.signal-bars span:nth-child(4){height:10px;background:var(--nokia-dim)}
+
+/* ─── NAV ─── */
+nav{display:flex;flex-direction:column;gap:2px}
+
+nav a{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--nokia-lit);
+  text-decoration:none;
+  padding:8px 10px;
+  border:1px solid transparent;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:all 0.15s;
+  position:relative;
+  image-rendering:pixelated;
+}
+
+nav a .nav-num{
+  font-size:9px;
+  color:var(--nokia-dim);
+  min-width:14px;
+}
+
+nav a:hover,nav a.active{
+  background:var(--nokia-mid);
+  border-color:var(--nokia-dim);
+  color:var(--nokia-glow);
+  text-shadow:0 0 8px var(--nokia-lit);
+}
+
+nav a.active .nav-num{color:var(--nokia-lit)}
+
+/* ─── SIDEBAR BOTTOM ─── */
+.sidebar-bottom{
+  border-top:1px solid var(--nokia-border);
+  padding-top:1rem;
+}
+
+.battery{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-family:var(--font-mono);
+  font-size:9px;
+  color:var(--nokia-dim);
+  margin-bottom:10px;
+}
+.battery-icon{
+  width:20px;height:10px;
+  border:1px solid var(--nokia-dim);
+  border-radius:1px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  padding:2px;
+  gap:1px;
+}
+.battery-icon::after{
+  content:'';
+  position:absolute;
+  right:-4px;top:3px;
+  width:3px;height:4px;
+  background:var(--nokia-dim);
+  border-radius:0 1px 1px 0;
+}
+.battery-icon span{
+  display:block;
+  width:4px;height:100%;
+  background:var(--nokia-lit);
+  border-radius:1px;
+}
+
+.ext-links{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.ext-links a{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--nokia-dim);
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  transition:color 0.15s;
+}
+.ext-links a::before{
+  content:'>';
+  color:var(--nokia-mid);
+  font-size:10px;
+}
+.ext-links a:hover{color:var(--nokia-bright)}
+
+/* ─── MAIN CONTENT ─── */
+.content{
+  margin-left:var(--sidebar-w);
+  flex:1;
+}
+
+/* ─── FULL-PAGE SECTIONS ─── */
+section{
+  min-height:100vh;
+  padding:5rem 4rem 4rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  border-bottom:1px solid var(--nokia-border);
+  max-width:780px;
+}
+
+/* ─── HOME ─── */
+#home{
+  justify-content:center;
+  gap:2rem;
+}
+
+.home-eyebrow{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--nokia-dim);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.home-eyebrow::before{
+  content:'';
+  display:block;
+  width:20px;height:1px;
+  background:var(--nokia-dim);
+}
+
+#home h1{
+  font-family:var(--font-pixel);
+  font-size:clamp(13px, 2vw, 18px);
+  font-weight:normal;
+  line-height:1.8;
+  color:var(--nokia-glow);
+  text-shadow:0 0 10px var(--nokia-lit), 0 0 24px rgba(106,171,58,0.3);
+  letter-spacing:0.02em;
+  max-width:520px;
+}
+
+#home p{
+  font-family:var(--font-mono);
+  font-size:13px;
+  color:var(--nokia-lit);
+  line-height:1.7;
+  max-width:440px;
+  opacity:0.85;
+}
+
+.pixel-divider{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--font-pixel);
+  font-size:7px;
+  color:var(--nokia-mid);
+  letter-spacing:0.2em;
+}
+
+/* ─── SECTION LABEL ─── */
+.section-label{
+  font-family:var(--font-pixel);
+  font-size:8px;
+  color:var(--nokia-lit);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  text-shadow:0 0 8px var(--nokia-lit);
+  margin-bottom:2.5rem;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.section-label::before{
+  content:'//';
+  color:var(--nokia-dim);
+  font-size:9px;
+}
+.section-label::after{
+  content:'';
+  flex:1;
+  max-width:60px;
+  height:1px;
+  background:var(--nokia-mid);
+}
+
+/* ─── ABOUT ─── */
+#about p{
+  font-family:var(--font-body);
+  font-size:15px;
+  color:var(--nokia-bright);
+  line-height:1.85;
+  max-width:520px;
+  opacity:0.8;
+}
+
+/* ─── ENTRIES ─── */
+.entry{
+  border-top:1px solid var(--nokia-border);
+  padding:1.75rem 0;
+  transition:border-color 0.2s;
+  cursor:default;
+}
+.entry:last-child{border-bottom:1px solid var(--nokia-border)}
+.entry:hover{border-top-color:var(--nokia-mid)}
+
+.entry-header{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:0.5rem;
+  flex-wrap:wrap;
+}
+
+.entry h3{
+  font-family:var(--font-pixel);
+  font-size:9px;
+  font-weight:normal;
+  color:var(--nokia-glow);
+  line-height:1.7;
+  text-shadow:0 0 6px rgba(106,171,58,0.5);
+  letter-spacing:0.05em;
+}
+
+.meta{
+  font-family:var(--font-mono);
+  font-size:9px;
+  letter-spacing:0.12em;
+  color:var(--nokia-dim);
+  text-transform:uppercase;
+  white-space:nowrap;
+  flex-shrink:0;
+  border:1px solid var(--nokia-border);
+  padding:3px 8px;
+}
+
+.entry p{
+  font-family:var(--font-body);
+  font-size:13.5px;
+  color:var(--nokia-lit);
+  line-height:1.8;
+  max-width:520px;
+  opacity:0.8;
+  margin-top:0.6rem;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--nokia-bg)}
+::-webkit-scrollbar-thumb{background:var(--nokia-mid);border-radius:0}
+
+/* ─── MOBILE ─── */
+@media(max-width:900px){
+  .sidebar{
+    position:fixed;
+    bottom:0;top:auto;
+    width:100%;
+    height:auto;
+    flex-direction:column;
+    border-right:none;
+    border-top:2px solid var(--nokia-mid);
+    padding:0.75rem 1rem;
+    gap:0.5rem;
+  }
+  .sidebar::before{top:auto;bottom:0;height:0}
+  .pixel-name-wrap,.status-bar,.sidebar-bottom{display:none}
+  nav{flex-direction:row;flex-wrap:wrap;gap:4px}
+  nav a{font-size:8px;padding:5px 7px;gap:4px}
+  nav a .nav-num{display:none}
+  .content{margin-left:0;padding-bottom:80px}
+  section{padding:3.5rem 1.5rem 3rem;min-height:auto}
+  #home h1{font-size:11px}
+  .entry h3{font-size:8px}
+}
+
+@media(max-width:480px){
+  section{padding:3rem 1.25rem 2.5rem}
+  nav a{font-size:7px;padding:4px 6px}
+}
+</style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div>
-            <span class="pixel-name">RASIK S</span>
-            <nav id="main-nav">
-                <a href="#home">1. Home</a>
-                <a href="#about">2. About</a>
-                <a href="#intelligence">3. Intelligence</a>
-                <a href="#simulations">4. Simulations</a>
-                <a href="#robotics">5. Robotics</a>
-                <a href="#design">6. Creative</a>
-            </nav>
-        </div>
-        <div class="sidebar-bottom">
-            <a href="https://github.com/rasikzzz" style="color:var(--nokia-dim);font-family:monospace;font-size:10px;">GITHUB</a>
-        </div>
-    </aside>
+<aside class="sidebar" role="navigation" aria-label="Site navigation">
+  <div>
+    <div class="pixel-name-wrap">
+      <span class="pixel-name">RASIK S<span class="pixel-cursor"></span></span>
+      <span class="pixel-sub">Archive v1.0</span>
+    </div>
+    <div class="status-bar">
+      <div class="signal-bars">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <span>AI/ML</span>
+    </div>
+    <nav id="main-nav">
+      <a href="#home"><span class="nav-num">1.</span> Home</a>
+      <a href="#about"><span class="nav-num">2.</span> About</a>
+      <a href="#intelligence"><span class="nav-num">3.</span> Intelligence</a>
+      <a href="#simulations"><span class="nav-num">4.</span> Simulations</a>
+      <a href="#robotics"><span class="nav-num">5.</span> Robotics</a>
+      <a href="#design"><span class="nav-num">6.</span> Creative</a>
+    </nav>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="battery">
+      <div class="battery-icon">
+        <span></span><span></span><span></span>
+      </div>
+      <span>online</span>
+    </div>
+    <div class="ext-links">
+      <a href="https://github.com/rasikzzz" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</aside>
 
-    <main class="content">
-        <section id="home">
-            <h1>Architecting<br>intelligent systems.</h1>
-            <p>AI/ML student at JOY University. Bridging the gap between software logic and physical hardware.</p>
-        </section>
+<main class="content">
 
-        <section id="about">
-            <div class="section-title">/ About Me</div>
-            <p>A B.Tech AI/ML researcher building systems that think, simulate, and navigate.</p>
-        </section>
+  <section id="home">
+    <div class="home-eyebrow">JOY University &nbsp;·&nbsp; AI / ML</div>
+    <h1>Architecting<br>intelligent systems.</h1>
+    <div class="pixel-divider">██░░░░░░░░░░░░░░░░░░░░██</div>
+    <p>B.Tech AI/ML student bridging the gap between software logic and physical hardware.</p>
+  </section>
 
-        </main>
+  <section id="about">
+    <div class="section-label">About me</div>
+    <p>A B.Tech AI/ML researcher driven by the philosophy that the most robust software is that which interacts seamlessly with the physical world. Building systems that think, simulate, and navigate.</p>
+  </section>
 
+  <section id="intelligence">
+    <div class="section-label">Intelligence</div>
+    <div class="entry">
+      <div class="entry-header">
+        <h3>TCCC Tactical Medical Assistant</h3>
+        <span class="meta">RAG · LLMs</span>
+      </div>
+      <p>An offline-first retrieval system designed for combat casualty protocols, ensuring mission-critical guidance in disconnected environments.</p>
+    </div>
+  </section>
+
+  <section id="simulations">
+    <div class="section-label">Simulations</div>
+    <div class="entry">
+      <div class="entry-header">
+        <h3>Surface Kinematics Engine</h3>
+        <span class="meta">Physics · Dynamics</span>
+      </div>
+      <p>A virtual environment for validating navigation algorithms and hull propulsion efficiency for autonomous marine robotics.</p>
+    </div>
+  </section>
+
+  <section id="robotics">
+    <div class="section-label">Robotics</div>
+    <div class="entry">
+      <div class="entry-header">
+        <h3>Project HYDRA</h3>
+        <span class="meta">Embedded · Hardware</span>
+      </div>
+      <p>A solar-powered autonomous catamaran utilizing ESP32 microcontrollers and sonar arrays for long-duration aquatic research.</p>
+    </div>
+  </section>
+
+  <section id="design">
+    <div class="section-label">Creative</div>
+    <div class="entry">
+      <div class="entry-header">
+        <h3>SOCI Identity Suite</h3>
+        <span class="meta">UI/UX · Branding</span>
+      </div>
+      <p>Visual systems design for the School of Computational Intelligence, bridging neural-network aesthetics with academic rigor.</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('#main-nav a');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('active'));
+      const a=document.querySelector(`#main-nav a[href="#${e.target.id}"]`);
+      if(a)a.classList.add('active');
+    }
+  });
+},{threshold:0.4,rootMargin:'-10% 0px -10% 0px'});
+sections.forEach(s=>io.observe(s));
+</script>
 </body>
 </html>
